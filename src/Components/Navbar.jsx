@@ -11,7 +11,7 @@ const Navbar = () => {
     try {
       await logOut();
     } catch (e) {
-      console.error("Logout failed:", e);
+     // console.error("Logout failed:", e);
     }
   };
 
