@@ -1,23 +1,51 @@
-import React from "react";
-import { NavLink } from "react-router";
-import user from "../assets/user.png"
+// src/components/Navbar.jsx
+import React, { useContext } from "react";
+import { NavLink, Link } from "react-router";
+import avatarPlaceholder from "../assets/user.png";
+import { AuthContext } from "../Provider/AuthProvider";
 
-const Navbar =()=>{
-    return(
+const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
 
-        <div className="flex justify-between items-center">
-            <div className=""></div>
-            <div className="nav flex gap-5 text-gray-400">
-                <NavLink to="/">Home</NavLink>
-                <NavLink to="/about">about</NavLink>
-                <NavLink to="/career">Career</NavLink>
-            </div>
-            <div className="login-btn flex gap-5">
-                <img src={user} alt="" />
-                <button className="btn btn-primary px-10">Login</button>
-            </div>
-        </div>
-    )
-}
+  const handleLogout = async () => {
+    try {
+      await logOut();
+    } catch (e) {
+      console.error("Logout failed:", e);
+    }
+  };
+
+  return (
+    <header className="flex justify-between items-center py-3">
+      <div className="text-sm text-slate-600">{user?.email}</div>
+
+      <nav className="flex gap-5">
+        <NavLink to="/" end className={({ isActive }) => isActive ? "font-semibold text-slate-900" : "text-slate-500"}>
+          Home
+        </NavLink>
+        <NavLink to="/about" className={({ isActive }) => isActive ? "font-semibold text-slate-900" : "text-slate-500"}>
+          About
+        </NavLink>
+        <NavLink to="/career" className={({ isActive }) => isActive ? "font-semibold text-slate-900" : "text-slate-500"}>
+          Career
+        </NavLink>
+      </nav>
+
+      <div className="flex items-center gap-4">
+        <img
+          src={user?.photoURL || avatarPlaceholder}
+          alt="User avatar"
+          className="w-10 h-10 rounded-full object-cover"
+        />
+
+        {user ? (
+          <button onClick={handleLogout} className="btn btn-outline">Logout</button>
+        ) : (
+          <Link to="/auth/login" className="btn btn-primary px-10">Login</Link>
+        )}
+      </div>
+    </header>
+  );
+};
 
 export default Navbar;
